@@ -8,6 +8,7 @@ class SWOTEntry(models.Model):
     opportunities = models.TextField()       # List of opportunities (min 2 required)
     threats = models.TextField()             # List of threats (min 2 required)
     submitted_at = models.DateTimeField(auto_now_add=True)  # Auto timestamp
+    status = models.CharField(max_length=20, default='draft')  # Status of the entry
 
     def __str__(self):
         return f"{self.name}'s SWOT"
