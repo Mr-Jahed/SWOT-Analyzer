@@ -1,0 +1,206 @@
+<!-- This is the main HTML page to render the form and SWOT Matrix -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Personal SWOT Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0f7fa 0%, #f8fafc 100%);
+            padding: 40px;
+            color: #222;
+            min-height: 100vh;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 32px;
+            color: #003366;
+            font-size: 38px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 8px #e0f7fa;
+        }
+        form {
+            background: rgba(255,255,255,0.95);
+            padding: 36px 32px 28px 32px;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(0, 51, 102, 0.08);
+            max-width: 700px;
+            margin: 0 auto 48px;
+            border: 1px solid #e3eafc;
+        }
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0 24px;
+            border: 1.5px solid #b3c6e0;
+            border-radius: 10px;
+            font-size: 16px;
+            background: #f7fbff;
+            transition: border 0.2s;
+        }
+        textarea:focus, input[type="text"]:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        button {
+            background: linear-gradient(90deg, #007bff 60%, #00bcd4 100%);
+            color: white;
+            padding: 12px 32px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,123,255,0.08);
+            transition: background 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #0056b3 60%, #0097a7 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .swot-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 36px;
+            background: rgba(255,255,255,0.97);
+            box-shadow: 0 6px 24px rgba(0,51,102,0.07);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .swot-table th, .swot-table td {
+            border: none;
+            padding: 22px 18px;
+            vertical-align: top;
+            font-size: 17px;
+        }
+        .swot-table th {
+            background: linear-gradient(90deg, #e3f2fd 70%, #e0f7fa 100%);
+            color: #0056b3;
+            font-size: 21px;
+            font-weight: 700;
+            text-align: center;
+            border-bottom: 2px solid #b3c6e0;
+        }
+        .swot-table tr:not(:last-child) td {
+            border-bottom: 1px solid #e3eafc;
+        }
+        ul {
+            padding-left: 22px;
+            margin-bottom: 0;
+        }
+        ul li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        .suggestion {
+            margin-top: 28px;
+            background: linear-gradient(90deg, #e8f5e9 80%, #f1f8e9 100%);
+            padding: 18px 24px;
+            border-left: 7px solid #43a047;
+            font-style: italic;
+            border-radius: 10px;
+            font-size: 17px;
+            box-shadow: 0 2px 8px rgba(67,160,71,0.07);
+        }
+        h3 {
+            text-align: center;
+            margin-top: 28px;
+            color: #006064;
+            font-size: 26px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        @media (max-width: 800px) {
+            form, .swot-table {
+                max-width: 98vw;
+                padding: 18px;
+            }
+            .swot-table th, .swot-table td {
+                padding: 12px 8px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Mr Jahed's SWOT Analyzer</h2>
+
+    <!-- Form to collect user input -->
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div style="text-align: center;">
+            <button type="submit">🔍 Analyze Here</button>
+        </div>
+    </form>
+
+    <!-- Show SWOT Matrix if data is available -->
+    {% if entry %}
+    <h3>SWOT Matrix for: {{ entry.name }}</h3>
+
+    <table class="swot-table">
+        <tr>
+            <th>Strengths</th>
+            <th>Weaknesses</th>
+        </tr>
+        <tr>
+            <td>
+                <ul>
+                    {% for item in entry.strengths.splitlines %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    {% for item in entry.weaknesses.splitlines %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Opportunities</th>
+            <th>Threats</th>
+        </tr>
+        <tr>
+            <td>
+                <ul>
+                    {% for item in entry.opportunities.splitlines %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    {% for item in entry.threats.splitlines %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Show suggestion if available -->
+    {% if suggestion %}
+    <div class="suggestion">
+        💡 {{ suggestion }}
+    </div>
+    {% endif %}
+    {% endif %}
+
+</body>
+</html>
