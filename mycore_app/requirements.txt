@@ -1,4 +1,7 @@
 pandas
 numpy
 scikit-learn
+matplotlib
+seaborn
+
 (This all is just for git practice)
